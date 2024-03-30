@@ -19,4 +19,8 @@ public class PersonRepository implements PanacheRepositoryBase<Person, UUID> {
     public Uni<List<Person>> findByTerm(String term) {
         return find("#Person.findByTerm", Map.of("term", String.format("%%%s%%", term))).page(FIRST_PAGE).list();
     }
+
+    public Uni<Person> findByIdWithStack(UUID uuid) {
+        return find("#Person.findByIdWithStack", Map.of("id", uuid)).singleResult();
+    }
 }

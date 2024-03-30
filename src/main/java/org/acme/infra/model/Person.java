@@ -5,23 +5,26 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
-@NamedQuery(name = "Person.findByTerm",query = "SELECT DISTINCT p FROM Person p JOIN p.stack s WHERE p.nickname like :term or p.name like :term or s.name like :term")
+
 @Data
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
+@NamedQuery(name = "Person.findByIdWithStack", query = "FROM Person p JOIN FETCH p.stack s WHERE p.id = :id")
+@NamedQuery(name = "Person.findByTerm", query = "SELECT DISTINCT p FROM Person p JOIN p.stack s WHERE p.nickname like :term or p.name like :term or s.name like :term")
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    UUID id;
     @Column(unique = true, length = 32, nullable = false)
-    private String nickname;
+    String nickname;
     @Column(length = 100, nullable = false)
-    private String name;
+    String name;
     @Column(nullable = false)
-    private LocalDate dateOfBirth;
+    LocalDate dateOfBirth;
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Stack> stack = Set.of();
+    List<Stack> stack = List.of();
 }
+

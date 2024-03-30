@@ -1,21 +1,22 @@
 package org.acme.app.rest.resource;
 
 import io.smallrye.mutiny.Uni;
-import jakarta.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
-import lombok.Value;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.acme.app.rest.dto.request.PersonRequest;
 import org.acme.app.service.PersonService;
 import org.apache.commons.lang3.StringUtils;
 
-@Value
 @Slf4j
 @Path("/")
-@AllArgsConstructor(onConstructor = @__(@Inject))
+@FieldDefaults(makeFinal = true)
+@AllArgsConstructor
+@ApplicationScoped
 public class PersonResource {
     PersonService personService;
 

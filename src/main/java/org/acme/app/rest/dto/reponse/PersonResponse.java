@@ -9,9 +9,9 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 public class PersonResponse {
-    private String id;
-    private String nickname;
-    private String name;
-    private LocalDate dateOfBirth;
-    private Set<String> stack;
+    String id;
+    String nickname;
+    String name;
+    LocalDate dateOfBirth;
+    Set<String> stack;
 }
