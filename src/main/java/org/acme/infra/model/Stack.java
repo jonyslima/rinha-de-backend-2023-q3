@@ -11,7 +11,6 @@ import java.util.UUID;
 @NamedQuery(name = "Stack.findByIdPerson", query = "FROM Stack s JOIN s.person p WHERE p.id in :ids")
 public class Stack {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
     @Column(nullable = false, length = 32)
     String name;

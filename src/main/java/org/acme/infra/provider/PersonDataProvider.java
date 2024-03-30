@@ -23,7 +23,13 @@ public class PersonDataProvider implements PersonGateway {
     @Override
     public Uni<EPerson> save(EPerson ePerson) {
         Person person = personMapper.toPerson(ePerson);
-        person.getStack().forEach(s -> s.setPerson(person));
+        person.setId(UUID.randomUUID());
+
+        person.getStack().forEach(s -> {
+            s.setId(UUID.randomUUID());
+            s.setPerson(person);
+        });
+
         return personRepository.persist(person).map(personMapper::toPerson);
     }
 
