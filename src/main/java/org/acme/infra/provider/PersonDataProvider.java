@@ -3,6 +3,7 @@ package org.acme.infra.provider;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.NoResultException;
 import lombok.AllArgsConstructor;
 import org.acme.domain.gateway.PersonGateway;
 import org.acme.domain.model.EPerson;
@@ -29,7 +30,9 @@ public class PersonDataProvider implements PersonGateway {
     @Override
     public Uni<EPerson> findById(UUID id) {
         return personRepository.findByIdWithStack(id)
-                .map(personMapper::toPerson);
+                .map(personMapper::toPerson)
+                .onFailure(NoResultException.class)
+                .recoverWithNull();
     }
 
     @Override
