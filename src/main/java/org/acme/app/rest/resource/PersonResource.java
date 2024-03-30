@@ -24,8 +24,11 @@ public class PersonResource {
     @Path("pessoas")
     public Uni<Response> save(@Valid PersonRequest personRequest) {
         return personService.save(personRequest)
-                .map(Response::ok)
-                .map(Response.ResponseBuilder::build);
+                .map(personResponse -> {
+                    return Response.status(Response.Status.CREATED)
+                            .header("Location", String.format("/pessoas/%s", personResponse.getId()))
+                            .build();
+                });
     }
 
     @GET

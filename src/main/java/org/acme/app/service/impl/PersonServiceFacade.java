@@ -28,8 +28,8 @@ public class PersonServiceFacade implements PersonService {
 
     @Override
     @WithTransaction
-    public Uni<Void> save(PersonRequest personRequest) {
-        return savePersonUseCase.execute(personMapper.toPerson(personRequest));
+    public Uni<PersonResponse> save(PersonRequest personRequest) {
+        return savePersonUseCase.execute(personMapper.toPerson(personRequest)).map(personMapper::toPerson);
     }
 
     @Override

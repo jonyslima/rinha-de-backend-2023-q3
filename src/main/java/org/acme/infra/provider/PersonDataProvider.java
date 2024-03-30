@@ -21,10 +21,10 @@ public class PersonDataProvider implements PersonGateway {
     PersonMapper personMapper;
 
     @Override
-    public Uni<Void> save(EPerson ePerson) {
+    public Uni<EPerson> save(EPerson ePerson) {
         Person person = personMapper.toPerson(ePerson);
         person.getStack().forEach(s -> s.setPerson(person));
-        return personRepository.persist(person).replaceWithVoid();
+        return personRepository.persist(person).map(personMapper::toPerson);
     }
 
     @Override

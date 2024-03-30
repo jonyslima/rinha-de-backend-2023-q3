@@ -14,7 +14,7 @@ public class SavePersonUseCaseImpl implements SavePersonUseCase {
     PersonGateway personGateway;
 
     @Override
-    public Uni<Void> execute(EPerson person) {
+    public Uni<EPerson> execute(EPerson person) {
         return personGateway.save(person);
     }
 }
