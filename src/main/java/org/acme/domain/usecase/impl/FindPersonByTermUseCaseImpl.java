@@ -2,10 +2,9 @@ package org.acme.domain.usecase.impl;
 
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import lombok.AllArgsConstructor;
-import lombok.Value;
 import org.acme.domain.gateway.PersonGateway;
+import org.acme.domain.gateway.StackGateway;
 import org.acme.domain.model.EPerson;
 import org.acme.domain.model.EStack;
 import org.acme.domain.usecase.FindPersonByTermUseCase;
@@ -14,15 +13,22 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Value
 @ApplicationScoped
-@AllArgsConstructor(onConstructor = @__(@Inject))
+@AllArgsConstructor
 public class FindPersonByTermUseCaseImpl implements FindPersonByTermUseCase {
     PersonGateway personGateway;
+    StackGateway stackGateway;
 
     @Override
     public Uni<List<EPerson>> execute(String term) {
-        return personGateway.findByTerm(term);
+        return personGateway.findByTerm(term)
+                .onItem()
+                .transformToUni(people -> {
+                    Map<UUID, EPerson> personById = mapPersonById(people);
+                    return stackGateway.findStackByIdPerson(personById.keySet())
+                            .invoke(stacks -> addStacksToPerson(personById, stacks))
+                            .replaceWith(people);
+                });
     }
 
     private static Map<UUID, EPerson> mapPersonById(List<EPerson> people) {

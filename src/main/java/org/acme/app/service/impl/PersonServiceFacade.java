@@ -6,7 +6,6 @@ import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.AllArgsConstructor;
-import lombok.Value;
 import org.acme.app.rest.dto.reponse.PersonResponse;
 import org.acme.app.rest.dto.request.PersonRequest;
 import org.acme.app.service.PersonService;
@@ -18,7 +17,6 @@ import org.acme.domain.usecase.SavePersonUseCase;
 
 import java.util.List;
 
-@Value
 @ApplicationScoped
 @AllArgsConstructor(onConstructor = @__(@Inject))
 public class PersonServiceFacade implements PersonService {
@@ -51,6 +49,6 @@ public class PersonServiceFacade implements PersonService {
     @Override
     @WithSession
     public Uni<Long> count() {
-        return countPersonUseCase.count();
+        return countPersonUseCase.execute();
     }
 }
