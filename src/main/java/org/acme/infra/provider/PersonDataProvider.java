@@ -25,6 +25,10 @@ public class PersonDataProvider implements PersonGateway {
         Person person = personMapper.toPerson(ePerson);
         person.setId(UUID.randomUUID());
 
+        if(person.getStack()==null){
+            person.setStack(List.of());
+        }
+
         person.getStack().forEach(s -> {
             s.setId(UUID.randomUUID());
             s.setPerson(person);
