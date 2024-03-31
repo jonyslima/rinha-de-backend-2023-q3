@@ -8,6 +8,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+@Table(indexes = {@Index(columnList = "personId")})
 @NamedQuery(name = "Stack.findByIdPerson", query = "FROM Stack s JOIN s.person p WHERE p.id in :ids")
 public class Stack {
     @Id
