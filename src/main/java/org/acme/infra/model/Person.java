@@ -12,11 +12,10 @@ import java.util.UUID;
 @Data
 @Entity
 @NoArgsConstructor
-@NamedQuery(name = "Person.findByIdWithStack", query = "FROM Person p JOIN FETCH p.stack s WHERE p.id = :id")
+@NamedQuery(name = "Person.findByIdWithStack", query = "FROM Person p LEFT JOIN FETCH p.stack s WHERE p.id = :id")
 @NamedQuery(name = "Person.findByTerm", query = "SELECT DISTINCT p FROM Person p JOIN p.stack s WHERE p.nickname like :term or p.name like :term or s.name like :term")
 public class Person {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
     @Column(unique = true, length = 32, nullable = false)
     String nickname;
