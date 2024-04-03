@@ -13,7 +13,7 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @NamedQuery(name = "Person.findByIdWithStack", query = "FROM Person p LEFT JOIN FETCH p.stack s WHERE p.id = :id")
-@NamedQuery(name = "Person.findByTerm", query = "SELECT DISTINCT p FROM Person p JOIN p.stack s WHERE p.nickname like :term or p.name like :term or s.name like :term")
+@NamedQuery(name = "Person.findByTerm", query = "SELECT DISTINCT p FROM Person p JOIN p.stack s WHERE p.searchable like :term")
 public class Person {
     @Id
     UUID id;
@@ -25,5 +25,6 @@ public class Person {
     LocalDate dateOfBirth;
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Stack> stack = List.of();
+    String searchable;
 }
 

@@ -10,6 +10,7 @@ import org.acme.domain.model.EPerson;
 import org.acme.infra.model.Person;
 import org.acme.infra.provider.mappers.PersonMapper;
 import org.acme.infra.repository.PersonRepository;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,14 +26,25 @@ public class PersonDataProvider implements PersonGateway {
         Person person = personMapper.toPerson(ePerson);
         person.setId(UUID.randomUUID());
 
-        if(person.getStack()==null){
+        if (person.getStack() == null) {
             person.setStack(List.of());
         }
+
+        StringBuilder searchable = new StringBuilder();
+
+        searchable.append(person.getName());
+        searchable.append(StringUtils.SPACE);
+        searchable.append(person.getNickname());
+        searchable.append(StringUtils.SPACE);
 
         person.getStack().forEach(s -> {
             s.setId(UUID.randomUUID());
             s.setPerson(person);
+            searchable.append(s.getName());
+            searchable.append(StringUtils.SPACE);
         });
+
+        person.setSearchable(searchable.toString());
 
         return personRepository.persist(person).map(personMapper::toPerson);
     }
