@@ -4,6 +4,7 @@ import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,11 +25,11 @@ public class PersonResource {
     @Path("pessoas")
     public Uni<Response> save(@Valid PersonRequest personRequest) {
         return personService.save(personRequest)
-                .map(personResponse -> {
-                    return Response.status(Response.Status.CREATED)
-                            .header("Location", String.format("/pessoas/%s", personResponse.getId()))
-                            .build();
-                });
+                .map(personResponse ->
+                        Response.status(Response.Status.CREATED)
+                                .header(HttpHeaders.LOCATION, String.format("/pessoas/%s", personResponse.getId()))
+                                .build()
+                );
     }
 
     @GET

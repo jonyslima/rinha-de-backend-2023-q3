@@ -13,7 +13,6 @@ public class ValidationExceptionHandler implements ExceptionMapper<ValidationExc
 
     @Override
     public Response toResponse(ValidationException exception) {
-        LOG.error("error", exception);
         return Response.status(UNPROCESSABLE_ENTITY).build();
     }
 }

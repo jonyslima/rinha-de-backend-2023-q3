@@ -14,7 +14,7 @@ import java.util.UUID;
 @Value
 @ApplicationScoped
 public class PersonRepository implements PanacheRepositoryBase<Person, UUID> {
-    private static final Page FIRST_PAGE = new Page(5);
+    private static final Page FIRST_PAGE = new Page(50);
 
     public Uni<List<Person>> findByTerm(String term) {
         return find("#Person.findByTerm", Map.of("term", String.format("%%%s%%", term))).page(FIRST_PAGE).list();
