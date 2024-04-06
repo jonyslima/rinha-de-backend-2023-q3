@@ -13,7 +13,7 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @NamedQuery(name = "Person.findByIdWithStack", query = "FROM Person p LEFT JOIN FETCH p.stack s WHERE p.id = :id")
-@NamedQuery(name = "Person.findByTerm", query = "SELECT DISTINCT p FROM Person p JOIN p.stack s WHERE p.searchable like :term")
+@NamedQuery(name = "Person.findByTerm", query = "FROM Person p WHERE p.searchable like :term")
 public class Person {
     @Id
     UUID id;

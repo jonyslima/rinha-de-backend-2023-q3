@@ -10,7 +10,6 @@ import org.acme.domain.model.EPerson;
 import org.acme.infra.model.Person;
 import org.acme.infra.provider.mappers.PersonMapper;
 import org.acme.infra.repository.PersonRepository;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +17,7 @@ import java.util.UUID;
 @ApplicationScoped
 @AllArgsConstructor(onConstructor = @__(@Inject))
 public class PersonDataProvider implements PersonGateway {
+    private static final String TAB = "\t";
     PersonRepository personRepository;
     PersonMapper personMapper;
 
@@ -33,15 +33,15 @@ public class PersonDataProvider implements PersonGateway {
         StringBuilder searchable = new StringBuilder();
 
         searchable.append(person.getName());
-        searchable.append(StringUtils.SPACE);
+        searchable.append(TAB);
         searchable.append(person.getNickname());
-        searchable.append(StringUtils.SPACE);
+        searchable.append(TAB);
 
         person.getStack().forEach(s -> {
             s.setId(UUID.randomUUID());
             s.setPerson(person);
             searchable.append(s.getName());
-            searchable.append(StringUtils.SPACE);
+            searchable.append(TAB);
         });
 
         person.setSearchable(searchable.toString());
