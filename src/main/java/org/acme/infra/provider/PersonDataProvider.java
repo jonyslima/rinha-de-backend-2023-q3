@@ -58,6 +58,11 @@ public class PersonDataProvider implements PersonGateway {
     }
 
     @Override
+    public Uni<Boolean> existsByNickname(String nickname) {
+        return personRepository.existsByNickName(nickname);
+    }
+
+    @Override
     public Uni<List<EPerson>> findByTerm(String term) {
         return personRepository.findByTerm(term)
                 .map(personMapper::toPersonWithoutStack);

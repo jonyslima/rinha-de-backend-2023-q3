@@ -20,6 +20,14 @@ public class PersonRepository implements PanacheRepositoryBase<Person, UUID> {
         return find("#Person.findByTerm", Map.of("term", String.format("%%%s%%", term))).page(FIRST_PAGE).list();
     }
 
+    public Uni<Boolean> existsByNickName(String nickname) {
+        return find("#Person.findByNickname", Map.of("nickname", nickname))
+                .singleResult()
+                .replaceWith(Boolean.TRUE)
+                .onFailure()
+                .recoverWithItem(Boolean.FALSE);
+    }
+
     public Uni<Person> findByIdWithStack(UUID uuid) {
         return find("#Person.findByIdWithStack", Map.of("id", uuid)).singleResult();
     }

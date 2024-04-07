@@ -12,6 +12,8 @@ public interface PersonGateway {
 
     public Uni<EPerson> findById(UUID id);
 
+    public Uni<Boolean> existsByNickname(String nickname);
+
     public Uni<List<EPerson>> findByTerm(String term);
 
     public Uni<Long> count();
