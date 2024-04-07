@@ -6,51 +6,75 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.75'
-          memory: '1.5GB'
+          cpus: '1.35'
+          memory: '2GB'
+    network_mode: host
+    command: postgres -c 'max_connections=810'
+    volumes:
+#      - ./postgresql.conf:/var/lib/postgresql/data/postgresql.conf
+      - ./ddl.sql:/docker-entrypoint-initdb.d/ddl.sql
     environment:
       POSTGRES_USER: "quarkus"
       POSTGRES_PASSWORD: "quarkus"
       POSTGRES_DB: "rinha-dev"
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: pg_isready -U postgres
+    expose:
+      - "5432"
    # command: dockerize -wait tcp://db:5432 -timeout 60s
   api1: &app # API - Instância 01
-    image: jslima/rinha-dev-java:latest
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile.native-micro
     hostname: api1
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     expose:
       - "8080"
+      - "9090"
     deploy:
       resources:
         limits:
-          cpus: '0.25'
-          memory: '0.5GB'
+          cpus: '0.125'
+          memory: '0.25GB'
+    network_mode: host
     environment:
-      URL_DATABASE: "postgresql://db:5432/rinha-dev"
+      URL_DATABASE: "vertx-reactive:postgresql://localhost:5432/rinha-dev"
       DATABASE_USERNAME: "quarkus"
       DATABASE_PASSWORD: "quarkus"
-      LOG_LEVEL: "DEBUG"
+      LOG_LEVEL: "INFO"
       LOG_SQL: "false"
+      PORT_HTTP: "8080"
+      POOL_SIZE: 400
+      RJMX_PORT: 9090
   #  command: dockerize -wait tcp://db:5432 -timeout 60s
   api2: # API - Instância 01
     <<: *app
     hostname: api2
+    expose:
+      - "8081"
+      - "9091"
+    environment:
+      URL_DATABASE: "vertx-reactive:postgresql://localhost:5432/rinha-dev"
+      DATABASE_USERNAME: "quarkus"
+      DATABASE_PASSWORD: "quarkus"
+      LOG_LEVEL: "INFO"
+      LOG_SQL: "false"
+      PORT_HTTP: "8081"
+      POOL_SIZE: 400
+      RJMX_PORT: 9091
   nginx: # Load Balancer
     image: nginx:latest
+    expose:
+      - "9999"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - api1
       - api2
-    ports:
-      - "9999:9999"
+      #    ports:
+      # - "9999:9999"
+    network_mode: host
     deploy:
       resources:
         limits:
-          cpus: '0.25'
+          cpus: '0.15'
           memory: '0.5GB'
