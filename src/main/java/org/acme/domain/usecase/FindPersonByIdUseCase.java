@@ -5,5 +5,5 @@ import org.acme.domain.model.EPerson;
 
 public interface FindPersonByIdUseCase {
 
-    public Uni<EPerson> execute(String id);
+    Uni<EPerson> execute(String id);
 }

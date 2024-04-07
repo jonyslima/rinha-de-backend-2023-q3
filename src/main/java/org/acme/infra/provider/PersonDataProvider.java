@@ -2,7 +2,6 @@ package org.acme.infra.provider;
 
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.persistence.NoResultException;
 import lombok.AllArgsConstructor;
 import org.acme.domain.gateway.PersonGateway;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped
-@AllArgsConstructor(onConstructor = @__(@Inject))
+@AllArgsConstructor
 public class PersonDataProvider implements PersonGateway {
     private static final String TAB = "\t";
     PersonRepository personRepository;

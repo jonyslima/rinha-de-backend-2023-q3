@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface FindPersonByTermUseCase {
 
-    public Uni<List<EPerson>> execute(String term);
+    Uni<List<EPerson>> execute(String term);
 }

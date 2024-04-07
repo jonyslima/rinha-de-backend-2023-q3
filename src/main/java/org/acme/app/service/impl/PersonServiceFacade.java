@@ -4,7 +4,6 @@ import io.quarkus.hibernate.reactive.panache.common.WithSession;
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import lombok.AllArgsConstructor;
 import org.acme.app.rest.dto.reponse.PersonResponse;
 import org.acme.app.rest.dto.request.PersonRequest;
@@ -18,7 +17,7 @@ import org.acme.domain.usecase.SavePersonUseCase;
 import java.util.List;
 
 @ApplicationScoped
-@AllArgsConstructor(onConstructor = @__(@Inject))
+@AllArgsConstructor
 public class PersonServiceFacade implements PersonService {
     SavePersonUseCase savePersonUseCase;
     FindPersonByIdUseCase findByIdUseCase;

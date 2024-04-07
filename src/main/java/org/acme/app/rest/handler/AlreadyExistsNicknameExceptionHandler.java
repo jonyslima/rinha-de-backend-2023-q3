@@ -6,6 +6,7 @@ import jakarta.ws.rs.ext.Provider;
 import org.acme.cross.exceptions.AlreadyExistsNicknameException;
 
 @Provider
+@SuppressWarnings("unused")
 public class AlreadyExistsNicknameExceptionHandler implements ExceptionMapper<AlreadyExistsNicknameException> {
     private static final int UNPROCESSABLE_ENTITY = 422;
 

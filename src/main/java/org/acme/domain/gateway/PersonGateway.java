@@ -8,13 +8,13 @@ import java.util.UUID;
 
 public interface PersonGateway {
 
-    public Uni<EPerson> save(EPerson person);
+    Uni<EPerson> save(EPerson person);
 
-    public Uni<EPerson> findById(UUID id);
+    Uni<EPerson> findById(UUID id);
 
-    public Uni<Boolean> existsByNickname(String nickname);
+    Uni<Boolean> existsByNickname(String nickname);
 
-    public Uni<List<EPerson>> findByTerm(String term);
+    Uni<List<EPerson>> findByTerm(String term);
 
-    public Uni<Long> count();
+    Uni<Long> count();
 }

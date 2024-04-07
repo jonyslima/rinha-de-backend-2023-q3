@@ -2,7 +2,6 @@ package org.acme.domain.usecase.impl;
 
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import lombok.AllArgsConstructor;
 import org.acme.domain.gateway.PersonGateway;
 import org.acme.domain.model.EPerson;
@@ -11,7 +10,7 @@ import org.acme.domain.usecase.FindPersonByIdUseCase;
 import java.util.UUID;
 
 @ApplicationScoped
-@AllArgsConstructor(onConstructor = @__(@Inject))
+@AllArgsConstructor
 public class FindPersonByIdUseCaseImpl implements FindPersonByIdUseCase {
     PersonGateway personGateway;
 

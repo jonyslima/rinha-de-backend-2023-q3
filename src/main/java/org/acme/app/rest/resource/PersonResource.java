@@ -7,17 +7,13 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.acme.app.rest.dto.request.PersonRequest;
 import org.acme.app.service.PersonService;
 import org.apache.commons.lang3.StringUtils;
 
-@Slf4j
 @Path("/")
-@FieldDefaults(makeFinal = true)
-@AllArgsConstructor
 @ApplicationScoped
+@AllArgsConstructor
 public class PersonResource {
     PersonService personService;
 
@@ -36,8 +32,10 @@ public class PersonResource {
     @Path("pessoas/{id}")
     public Uni<Response> findById(@PathParam("id") String id) {
         return personService.findById(id)
-                .onItem().ifNotNull().transform(p -> Response.ok(p).build())
-                .onItem().ifNull().continueWith(() -> Response.status(Response.Status.NOT_FOUND).build());
+                .onItem().ifNotNull()
+                .transform(p -> Response.ok(p).build())
+                .onItem().ifNull()
+                .continueWith(() -> Response.status(Response.Status.NOT_FOUND).build());
     }
 
     @GET
