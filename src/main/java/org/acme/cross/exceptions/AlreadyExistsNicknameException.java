@@ -1,7 +1,11 @@
 package org.acme.cross.exceptions;
 
+import java.text.MessageFormat;
+
 public class AlreadyExistsNicknameException extends Exception {
-    public AlreadyExistsNicknameException(String message) {
-        super(message);
+    private static final String MESSAGE = "already exists nickname: {0}";
+
+    public AlreadyExistsNicknameException(String nickname) {
+        super(MessageFormat.format(MESSAGE, nickname));
     }
 }

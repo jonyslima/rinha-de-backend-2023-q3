@@ -8,14 +8,15 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(indexes = {@Index(columnList = "personId")})
 @NamedQuery(name = "Stack.findByIdPerson", query = "FROM Stack s JOIN s.person p WHERE p.id in :ids")
 public class Stack {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
     @Column(nullable = false, length = 32)
     String name;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "personId", nullable = false, updatable = false, insertable = true)
     Person person;
+
 }
