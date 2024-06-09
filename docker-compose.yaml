@@ -20,66 +20,6 @@ services:
     expose:
       - "5432"
    # command: dockerize -wait tcp://db:5432 -timeout 60s
-  api1: &app # API - Instância 01
-    build:
-      context: .
-      dockerfile: src/main/docker/Dockerfile.jvm
-    hostname: api1
-    depends_on:
-      - db
-    expose:
-      - "8080"
-      - "9090"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.3'
-          memory: '0.5GB'
-    network_mode: host
-    environment:
-      URL_DATABASE: "vertx-reactive:postgresql://localhost:5432/rinha-dev"
-      DATABASE_USERNAME: "quarkus"
-      DATABASE_PASSWORD: "quarkus"
-      LOG_LEVEL: "INFO"
-      LOG_SQL: "false"
-      PORT_HTTP: "8080"
-      POOL_SIZE: 400
-      RJMX_PORT: 9090
-      EVENT_LOOP_SIZE: 1
-  #  command: dockerize -wait tcp://db:5432 -timeout 60s
-  api2: # API - Instância 01
-    <<: *app
-    hostname: api2
-    expose:
-      - "8081"
-      - "9091"
-    environment:
-      URL_DATABASE: "vertx-reactive:postgresql://localhost:5432/rinha-dev"
-      DATABASE_USERNAME: "quarkus"
-      DATABASE_PASSWORD: "quarkus"
-      LOG_LEVEL: "INFO"
-      LOG_SQL: "false"
-      PORT_HTTP: "8081"
-      POOL_SIZE: 400
-      RJMX_PORT: 9091
-      EVENT_LOOP_SIZE: 1
-  nginx: # Load Balancer
-    image: nginx:latest
-    expose:
-      - "9999"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - api1
-      - api2
-      #    ports:
-      # - "9999:9999"
-    network_mode: host
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: '2GB'
   redis:
     image: redis
     hostname: redis
@@ -92,3 +32,29 @@ services:
         limits:
           cpus: '0.15'
           memory: '0.3GB'
+  zookeeper:
+    image: quay.io/strimzi/kafka:0.23.0-kafka-2.8.0
+    command: [
+      "sh", "-c",
+      "bin/zookeeper-server-start.sh config/zookeeper.properties"
+    ]
+    ports:
+      - "2181:2181"
+    environment:
+      LOG_DIR: /tmp/logs
+
+  kafka:
+    image: quay.io/strimzi/kafka:0.23.0-kafka-2.8.0
+    command: [
+      "sh", "-c",
+      "bin/kafka-server-start.sh config/server.properties --override listeners=$${KAFKA_LISTENERS} --override advertised.listeners=$${KAFKA_ADVERTISED_LISTENERS} --override zookeeper.connect=$${KAFKA_ZOOKEEPER_CONNECT}"
+    ]
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      LOG_DIR: "/tmp/logs"
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181

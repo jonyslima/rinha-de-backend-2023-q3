@@ -20,7 +20,6 @@ public class Person {
     private static final String TAB = "\t";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
     @Column(unique = true, length = 32, nullable = false)
     String nickname;

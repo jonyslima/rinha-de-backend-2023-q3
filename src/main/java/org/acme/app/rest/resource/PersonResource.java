@@ -2,24 +2,34 @@ package org.acme.app.rest.resource;
 
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
-import lombok.AllArgsConstructor;
 import org.acme.app.rest.dto.request.PersonRequest;
 import org.acme.app.service.PersonService;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
+
+import java.util.UUID;
 
 @Path("/")
 @ApplicationScoped
-@AllArgsConstructor
 public class PersonResource {
     PersonService personService;
+    Emitter<PersonRequest> personEmiter;
+
+    @Inject
+    public PersonResource(PersonService personService, @Channel("person-out") Emitter<PersonRequest> personEmiter) {
+        this.personService = personService;
+        this.personEmiter = personEmiter;
+    }
 
     @POST
-    @Path("pessoas")
-    public Uni<Response> save(@Valid PersonRequest personRequest) {
+    @Path("pessoas2")
+    public Uni<Response> save(PersonRequest personRequest) {
         return personService.save(personRequest)
                 .map(personResponse ->
                         Response.status(Response.Status.CREATED)
@@ -57,6 +67,20 @@ public class PersonResource {
         return personService.count()
                 .map(Response::ok)
                 .map(Response.ResponseBuilder::build);
+    }
+
+
+    @POST
+    @Path("pessoas")
+    public Uni<Response> saveQueue(@Valid PersonRequest personRequest) {
+        personRequest.setId(UUID.randomUUID());
+        personEmiter.send(personRequest);
+
+        return Uni.createFrom().item(
+                Response.status(Response.Status.CREATED)
+                        .header(HttpHeaders.LOCATION, String.format("/pessoas/%s", personRequest.getId()))
+                        .build()
+        );
     }
 
 
