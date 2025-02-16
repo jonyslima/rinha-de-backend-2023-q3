@@ -15,7 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 @ApplicationScoped
 @AllArgsConstructor
 public class PersonResource {
-    PersonService personService;
+   private final PersonService personService;
 
     @POST
     @Path("pessoas")
